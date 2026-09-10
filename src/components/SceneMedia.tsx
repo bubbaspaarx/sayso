@@ -20,6 +20,7 @@ export function SceneMedia({ scene }: { scene: string }) {
           key={media.video}
           className="absolute inset-0 h-full w-full object-cover"
           src={media.video}
+          poster={media.image}
           autoPlay
           muted
           loop

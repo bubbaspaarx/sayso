@@ -3,3 +3,8 @@ dist
 .DS_Store
 *.local
 *.tsbuildinfo
+media-src/stills/
+media-src/clips/
+media-src/ref/
+.env
+media-src/candidates/

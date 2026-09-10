@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "media": "node scripts/media.mjs",
+    "stills": "node scripts/stills.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.1.0",
