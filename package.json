@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "media": "node scripts/media.mjs",
-    "stills": "node scripts/stills.mjs"
+    "stills": "node scripts/stills.mjs",
+    "clips": "node scripts/clips.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.1.0",

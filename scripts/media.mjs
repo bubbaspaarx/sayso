@@ -52,7 +52,7 @@ for (const scene of SCENES) {
     let width = 1280;
     for (let attempt = 0; attempt < 4; attempt++) {
       ff([
-        "-i", clip, "-filter_complex", `${filter};[v]scale=${width}:-2[vs]`, "-map", "[vs]", "-an",
+        "-i", clip, "-filter_complex", `${filter};[v]scale='min(${width},iw)':-2[vs]`, "-map", "[vs]", "-an",
         "-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-crf", String(crf), out,
       ]);
       const bytes = statSync(out).size;

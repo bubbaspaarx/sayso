@@ -8,7 +8,7 @@ Aspect 16:9. No faces. Landscape.
 
 ## Motion (image-to-video from the chosen still)
 
-Blue glow breathes gently, brightening and dimming on a slow cycle. Lantern flame flickers. Tiny motes of blue light rise from the leaves. Very subtle ambient motion only. Slow, gentle, looping. Static camera. No people moving. 8 seconds.
+Blue glow breathes gently, brightening and dimming on a slow cycle. Lantern flame flickers. Tiny motes of blue light rise from the leaves. Very subtle ambient motion only. Slow, gentle, looping. The camera is completely static: no zoom, no pan, no drift. No people, no faces, no hands. No text or watermark. Nothing new appears, nothing changes shape, no morphing, no flicker. Everything else in the picture stays exactly as it is.
 
 ## Files
 

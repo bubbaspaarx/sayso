@@ -274,4 +274,5 @@ You cannot tune the aligner without this. Build it in the first session.
 - `src/screens/`, `src/components/` — UI. `src/media/mediaMap.ts` — scene → `public/media/<scene>.mp4|jpg`.
 - Debug panel: `?debug=1`, triple-tap the title, or Shift+D. Keys: space = pretend next word, Enter = Next/continue.
 - `npm test` runs the aligner fixtures and a full story-flow test. CI runs tests before deploy.
+- Media pipeline: `npm run stills` (OpenRouter image API → `media-src/candidates/`), `npm run clips` (OpenRouter video API, Veo 3.1 Lite by default → `media-src/clips/`), `npm run media` (loop + compress + poster → `public/media/`). Prompts live in `VIDEO_PROMPTS.md`; key in `.env`.
 - Task tracking: `Code.nosync/Workboard/Sayso/` (Obsidian vault).
