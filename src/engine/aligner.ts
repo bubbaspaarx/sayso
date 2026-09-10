@@ -98,6 +98,11 @@ export function align(
       const thr = t.gate ? opts.gateSimilarity : opts.similarity;
       const via = matches(h, t.norm, thr);
       if (via) {
+        // A match that skips a hard word must be earned by a substantive word.
+        // Short heard tokens ("a", "uh") or soft targets may only match at the cursor,
+        // otherwise a stray "a" hops across "A lantern. A blanket. And a song."
+        const weak = h.length <= 2 || t.soft;
+        if (weak && hardSkips > 0) break;
         found = { heard: h, expectedIndex: j, expected: t.norm, via, skipped: [...skipped] };
         break;
       }

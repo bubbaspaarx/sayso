@@ -112,6 +112,19 @@ describe("aligner", () => {
     expect(r.cursor).toBe(r.exp.length);
   });
 
+  it("a stray or repeated 'a' cannot hop across hard words", () => {
+    const text = '"A lantern. A blanket. And a song. Not a torch."';
+    const r = read(text, ["a", "a", "a", "uh a"]);
+    expect(r.cursor).toBe(1); // parked on "lantern"
+  });
+
+  it("a substantive word can still skip past a mumbled one", () => {
+    const text = '"A lantern. A blanket. And a song. Not a torch."';
+    const r = read(text, ["a", "landed a blanket", "and a song"]);
+    expect(r.exp[r.cursor - 1].norm).toBe("song");
+    expect(r.matched.has(1)).toBe(false); // lantern was skipped, not matched
+  });
+
   it("homophones via confusion table", () => {
     const r = read("Nell went to the pond.", ["now went two the pound"]);
     expect(r.cursor).toBe(r.exp.length);
