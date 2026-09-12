@@ -3,14 +3,14 @@ import { mediaFor } from "../media/mediaMap";
 
 type Mode = "video" | "image" | "none";
 
-export function SceneMedia({ scene }: { scene: string }) {
-  const media = mediaFor(scene);
+export function SceneMedia({ stem, scene }: { stem: string; scene: string }) {
+  const media = mediaFor(stem, scene);
   const [mode, setMode] = useState<Mode>(media.video ? "video" : media.image ? "image" : "none");
 
   useEffect(() => {
-    const m = mediaFor(scene);
+    const m = mediaFor(stem, scene);
     setMode(m.video ? "video" : m.image ? "image" : "none");
-  }, [scene]);
+  }, [stem, scene]);
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-navy" aria-hidden>

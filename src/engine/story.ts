@@ -41,6 +41,7 @@ export type DebugInfo = {
 
 export type State = {
   chapter: Chapter;
+  stem: string; // content/<stem>.json — also the media folder
   screen: Screen;
   reading: Reading;
   bag: string[];
@@ -125,9 +126,10 @@ export function enterPassage(chapter: Chapter, passageId: string): Reading {
   };
 }
 
-export function initialState(chapter: Chapter, debugPanel = false): State {
+export function initialState(chapter: Chapter, debugPanel = false, stem = "chapter-01"): State {
   return {
     chapter,
+    stem,
     screen: "title",
     reading: enterPassage(chapter, chapter.start),
     bag: [],
@@ -429,7 +431,7 @@ export function reducer(state: State, action: Action): State {
       return state.justPicked ? { ...state, justPicked: null } : state;
 
     case "RESTART":
-      return { ...initialState(state.chapter, state.debugPanel), debug: log(state.debug, "restart") };
+      return { ...initialState(state.chapter, state.debugPanel, state.stem), debug: log(state.debug, "restart") };
 
     case "TOGGLE_DEBUG":
       return { ...state, debugPanel: !state.debugPanel };

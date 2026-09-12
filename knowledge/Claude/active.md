@@ -6,10 +6,11 @@ Reading MVP (Nell and the Cold Night). Brief + decisions log in `Sayso/CLAUDE.md
 _2026-09-12:_ first child read done (user's son, 7). Recognition "accurate to what a child says". Three defects found and fixed same day (next-sentence hop, uncredited tail, no misread feedback) and a reading report added for adults. **Uncommitted locally** — needs `git add -A && git commit && git push` to deploy.
 
 ## In Progress
+- **Chapter 2 (Coral and the Bubble Party)** complete 2026-09-12 22:46: 10 stills, 10 loops, 0 redos, $4.03, ~21 min. Ledger in `curation-ledger.md` + published artifact. **Uncommitted** with the rest of today's batch.
 - Awaiting commit/push of the 2026-09-12 batch: feed fix, skipped highlight, recovery, report, tail credit, x key, provisional skips, re-read hold, boots→p1, cues in p3. 40 tests green, build clean.
 
 ## Next Steps
-1. Push the 2026-09-12 batch; re-read with the child; use End → For grown-ups → Copy details and paste the dump into the session (replaces hunting for the debug panel).
+1. Push the 2026-09-12 batch (now includes chapter 2, library, chapter-aware pipeline); re-read with the child; use End → For grown-ups → Copy details and paste the dump into the session (replaces hunting for the debug panel).
 2. Validate the full-stop pause estimate against what the adult saw; tune thresholds in `report.ts`.
 3. Grow `src/engine/confusions.ts` from the "words to practise" list where they are mishears, not misreads.
 4. Rotate the OpenRouter key.
@@ -27,5 +28,7 @@ _2026-09-12:_ first child read done (user's son, 7). Recognition "accurate to wh
 - [x] Next-sentence hop fixed in TranscriptFeed (2026-09-12)
 - [x] Skipped highlight + recovery + report (2026-09-12)
 - [ ] Pause heuristic validation
+- [x] Chapter 2 built and ledgered (2026-09-12)
+- [ ] Daughter's first read of chapter 2
 - [ ] Child test → confusion table
 - [ ] Residual risk: final-revises-interim re-feed could double-advance on repeated words (caw caw caw). Watch, don't pre-fix.

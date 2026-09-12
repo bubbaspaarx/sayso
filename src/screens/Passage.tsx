@@ -20,7 +20,7 @@ export function Passage({ state, status, onNext, onCueExpire = () => {}, dim = f
   const passage = state.chapter.passages[state.reading.passageId];
   return (
     <div className="relative h-full overflow-hidden">
-      <SceneMedia scene={passage.scene} />
+      <SceneMedia stem={state.stem} scene={passage.scene} />
       <div className="absolute right-4 top-4 z-20" style={{ top: "max(1rem, env(safe-area-inset-top))" }}>
         <MicIndicator status={status} />
       </div>

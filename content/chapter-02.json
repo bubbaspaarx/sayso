@@ -1,0 +1,137 @@
+{
+  "id": "coral-01-bubble-party",
+  "title": "Coral and the Bubble Party",
+  "series": "Coral and Splash — Reading Adventures",
+  "readingLevel": "UK Reception–Year 1. Very short sentences, high-frequency words, a few sparkle words (mermaid, unicorn, seaweed, starfish, sneeze).",
+  "start": "p1",
+  "tolerantTokens": ["ah-choo", "achoo"],
+
+  "items": [
+    { "id": "pearl",    "label": "Pearl",    "emoji": "🫧" },
+    { "id": "shell",    "label": "Shell",    "emoji": "🐚" },
+    { "id": "starfish", "label": "Starfish", "emoji": "⭐" },
+    { "id": "crab",     "label": "Crab",     "emoji": "🦀" },
+    { "id": "seaweed",  "label": "Seaweed",  "emoji": "🌿" }
+  ],
+
+  "puzzles": {
+    "shipdoor": {
+      "id": "shipdoor",
+      "type": "pick-set",
+      "prompt": "The door needs three things. Pick three.",
+      "correct": ["pearl", "shell", "starfish"],
+      "pickCount": 3,
+      "onSuccess": "p10",
+      "hintAfterAttempts": 2,
+      "hintPassage": "p2",
+      "wrongFeedback": "The door stayed shut. What did Granny Tide say?"
+    }
+  },
+
+  "passages": {
+    "p1": {
+      "scene": "coral-home",
+      "text": "Coral was a mermaid. She lived in a little cave under the sea. Her best friend was Splash. Splash was a unicorn. A unicorn who could swim! Today was the Bubble Party. Splash found a pearl in the sand. \"Ooh,\" said Splash.",
+      "pickups": [{ "itemId": "pearl", "match": "pearl" }],
+      "next": "p2"
+    },
+
+    "p2": {
+      "scene": "granny-tide",
+      "text": "Granny Tide was a very old turtle. \"The party is at the Sunken Ship,\" she said. \"But the door is locked. To open it, you need three things. A pearl. A singing shell. And a starfish. Not a crab. Crabs pinch.\" Splash laughed.",
+      "cues": [
+        { "itemId": "pearl", "match": "pearl" },
+        { "itemId": "shell", "match": "shell" },
+        { "itemId": "starfish", "match": "starfish" }
+      ],
+      "next": "p3"
+    },
+
+    "p3": {
+      "scene": "granny-tide",
+      "text": "\"One more thing,\" said Granny Tide. \"Swim through the seaweed. Do not swim past the sleepy shark. He sneezes.\" \"Seaweed, not shark,\" said Coral. \"A shark that sneezes!\" said Splash. \"Ha!\"",
+      "next": "p4"
+    },
+
+    "p4": {
+      "scene": "sandy-bay",
+      "text": "They swam to the sandy bay. A crab sat on a rock. Splash put the crab on his head. \"A hat!\" said Splash. The crab pinched his ear. \"Ow!\" said Splash. Coral giggled.",
+      "pickups": [{ "itemId": "crab", "match": "crab" }],
+      "next": "p5"
+    },
+
+    "p5": {
+      "scene": "shell-garden",
+      "text": "Next, the shell garden. Shells of every colour! Coral held one to her ear. It sang a little song. \"A singing shell!\" said Coral. Splash tried one too. His shell went blub.",
+      "pickups": [{ "itemId": "shell", "match": "singing" }],
+      "next": "p6"
+    },
+
+    "p6": {
+      "scene": "rock-pool",
+      "text": "By the rocks, a starfish waved. \"Hello!\" said the starfish. \"Will you come to the party?\" asked Coral. \"Yes!\" said the starfish. It stuck to Splash's nose. Everyone laughed.",
+      "pickups": [{ "itemId": "starfish", "match": "starfish" }],
+      "next": "p7"
+    },
+
+    "p7": {
+      "scene": "seaweed-fork",
+      "text": "The path went two ways. Left, through the seaweed. Right, past the sleepy shark. \"Sharks are funny,\" said Splash. \"Let's go right!\" Coral stopped. What had Granny Tide said?",
+      "choice": {
+        "prompt": "Which way?",
+        "options": [
+          { "label": "Through the seaweed", "next": "p8b" },
+          { "label": "Past the shark", "next": "p8a" }
+        ]
+      }
+    },
+
+    "p8a": {
+      "scene": "sleepy-shark",
+      "text": "They swam right, past the shark. Big mistake. The shark opened one eye. \"Ah... ah... AH-CHOO!\" The sneeze blew them all the way back. \"Not the shark,\" said Coral. \"The seaweed.\"",
+      "next": "p7"
+    },
+
+    "p8b": {
+      "scene": "seaweed-forest",
+      "text": "They swam left, through the seaweed. It tickled. Splash ate some seaweed. \"Yum,\" he said. Then they saw it. The Sunken Ship! Bubbles floated up from inside. The party!",
+      "pickups": [{ "itemId": "seaweed", "match": "seaweed" }],
+      "next": "p9"
+    },
+
+    "p9": {
+      "scene": "ship-door",
+      "text": "The ship had a big wooden door. It was locked. Three little holes were in the door. \"Three things,\" said Coral. \"What did Granny Tide say?\" Splash held up the crab. \"Not the crab!\" said Coral.",
+      "puzzle": "shipdoor"
+    },
+
+    "p10": {
+      "scene": "ship-party",
+      "text": "Click! The door swung open. Bubbles everywhere! Fish danced. A jellyfish glowed like a lamp. Splash did a loop-the-loop. Coral laughed and laughed. It was the best party under the sea.",
+      "next": "p11"
+    },
+
+    "p11": {
+      "scene": "ship-party",
+      "text": "Granny Tide swam in slowly. \"You remembered,\" she said. Splash gave her a bubble. It popped on her nose. \"Ha!\" said Granny Tide. And they all danced until the moon came up."
+    }
+  },
+
+  "media": {
+    "stylePrefix": "Children's picture-book illustration, painterly gouache texture, soft edges, bright turquoise and teal underwater palette with coral-pink and sunlit-gold accents, shafts of sunlight through water, drifting bubbles, playful and cheerful, storybook, no text, no watermark.",
+    "motionSuffix": "Very subtle ambient motion only. Slow, gentle, looping. The camera is completely static: no zoom, no pan, no drift. No people, no faces, no hands. No text or watermark. Nothing new appears, nothing changes shape, no morphing, no flicker. Everything else in the picture stays exactly as it is.",
+    "anchor": "coral-home",
+    "scenes": {
+      "coral-home":     { "still": "A cosy little cave under the sea, its entrance framed by pink and orange coral, a bed of soft sea sponge inside, a shelf of shells, and a single bright pearl resting on the sand near the entrance, sunlight rippling across the sandy floor. No people, no creatures.", "motion": "Sunlight ripples on the sand. A few bubbles drift up slowly. Strands of seaweed sway gently. The pearl stays exactly where it is." },
+      "granny-tide":    { "still": "A wise old sea turtle's home under the sea: a big flat rock beneath a canopy of purple sea fans, a very old turtle with a mossy shell resting on the rock seen from behind, tiny yellow fish hovering nearby, warm light from above.", "motion": "The sea fans sway slowly. Tiny fish drift a little. Bubbles rise. The turtle stays perfectly still." },
+      "sandy-bay":      { "still": "A wide sandy bay under shallow sunlit water, ripples of light dancing on the sand, a small red crab sitting on a rock in the foreground, shells scattered about, the sand sloping down into deeper blue water.", "motion": "Light ripples dance on the sand. Sand drifts very slightly. The crab stays perfectly still." },
+      "shell-garden":   { "still": "An underwater garden of shells in every colour arranged among bright coral and anemones, one large spiral shell in the centre glowing softly gold, bubbles rising.", "motion": "The golden shell pulses gently. Anemones sway. Bubbles rise slowly." },
+      "rock-pool":      { "still": "Underwater rocks covered in soft anemones, a cheerful orange starfish on the nearest rock, shafts of sunlight streaming down from the surface, a few small silver fish.", "motion": "The sun shafts sway slowly. Small fish drift. The starfish stays perfectly still." },
+      "seaweed-fork":   { "still": "A sandy path on the sea floor forks into two clearly separate paths in the foreground like a letter Y: the left path leads into a tall swaying seaweed forest, the right path leads toward a dark rocky arch where a large grey shark sleeps with its eyes closed.", "motion": "Seaweed sways. Bubbles rise. The shark stays perfectly still with its eyes closed." },
+      "sleepy-shark":   { "still": "A big grey shark asleep on the sand under a rocky arch, eyes closed, one bubble coming from its nose, small fish keeping their distance. Funny, not scary.", "motion": "The shark's gills move slowly as it breathes. One bubble rises from its nose. Small fish drift. Its eyes stay closed." },
+      "seaweed-forest": { "still": "Inside a tall seaweed forest, green and golden fronds reaching up toward the sunlit surface, a sandy path through the middle, and far ahead the dark shape of an old sunken wooden ship with bubbles floating up from it.", "motion": "Fronds sway slowly. Bubbles drift up in the distance. Light shimmers." },
+      "ship-door":      { "still": "The side of an old sunken wooden ship on the sea floor, a big wooden door with three small round holes in it, shut tight, a faint warm glow leaking from the cracks, coral growing on the hull, dim blue water.", "motion": "The glow behind the door flickers faintly. A few bubbles leak from the cracks. Small fish drift." },
+      "ship-party":     { "editOf": "ship-door", "still": "Edit the reference image. Keep the ship, hull, coral and composition exactly as they are; change only the door and the light: the big wooden door now stands wide open, warm golden light and streams of bubbles pour out, glowing jellyfish float like lanterns around the doorway. Festive and joyful.", "motion": "Bubbles stream out of the doorway. The jellyfish glow pulses gently. The golden light flickers warmly. The ship and door stay exactly as they are." }
+    }
+  }
+}

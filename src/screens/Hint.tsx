@@ -7,7 +7,7 @@ export function Hint({ state, onDismiss }: { state: State; onDismiss: () => void
   const passage = state.chapter.passages[state.reading.passageId];
   return (
     <div className="relative h-full overflow-hidden">
-      <SceneMedia scene={passage.scene} />
+      <SceneMedia stem={state.stem} scene={passage.scene} />
       <div className="absolute inset-0 z-10 flex items-center justify-center px-[6vw]">
         <div className="fade-up flex max-w-[1000px] flex-col items-center gap-8 rounded-3xl border-2 border-amber/40 bg-navy-deep/85 p-10 shadow-2xl">
           <div className="text-lg font-bold uppercase tracking-[0.25em] text-amber/70">Remember</div>

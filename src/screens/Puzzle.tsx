@@ -17,7 +17,8 @@ export function PuzzleScreen({ state, onToggle, onTry, onContinue }: Props) {
 
   return (
     <div className="relative h-full overflow-hidden">
-      <SceneMedia scene={passage.scene} />
+      <SceneMedia stem={state.stem} scene={passage.scene} />
+      <div className="absolute inset-0 bg-navy-deep/55" />
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-8 px-[6vw]">
         {pz.success ? (
           <div className="fade-up flex flex-col items-center gap-8 text-center">

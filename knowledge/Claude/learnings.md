@@ -31,3 +31,9 @@
 - Workflow `branches: [main]` on a `master` repo silently deploys nothing; re-running the only existing run just redeploys the old commit. Check `gh run list` for which SHA actually deployed.
 - `concurrency: cancel-in-progress` + a manual re-run at the same time = cancelled push run, site stays stale.
 - Playwright `click({force:true})` on tiles under an overlay lands on the overlay. Close the debug panel (or don't open it) for automated puzzle flows.
+
+## Curation (chapter 2)
+- Second book on the finished pipeline: 24 stills + 10 clips, zero redos, $4.03, ~21 min. The prompt rules learned on chapter 1 (pin statics, no border, no faces, payoff as an edit of the before-scene) transferred completely.
+- Bright scenes need a scrim behind the puzzle prompt; the passage gradient alone is enough for the text block but not for centred UI.
+- A 2-column candidate sheet (ffmpeg hstack/vstack, built from Python to dodge zsh quoting) reviews 16 images in one look.
+- Underwater loops compress worse than night scenes (0.8–1.4 MB vs 0.3–0.8 MB); still under the 3 MB cap.

@@ -49,6 +49,10 @@ type Chapter = {
   passages: Record<string, Passage>;
   puzzles: Record<string, Puzzle>;
   tolerantTokens?: string[];           // hard proper nouns the aligner may skip freely
+  media?: {                            // everything the media scripts need — a chapter is ONE file
+    stylePrefix: string; motionSuffix: string; anchor?: string;
+    scenes: Record<string, { still: string; motion: string; editOf?: string }>;
+  };
 };
 
 type Item = { id: string; label: string; emoji: string };
@@ -300,5 +304,6 @@ You cannot tune the aligner without this. Build it in the first session.
 - `src/screens/`, `src/components/` — UI. `src/media/mediaMap.ts` — scene → `public/media/<scene>.mp4|jpg`.
 - Debug panel: `?debug=1`, triple-tap the title, or Shift+D. Keys: space = pretend next word, x = pretend the next word was mumbled, Enter = Next/continue.
 - `npm test` runs the aligner fixtures and a full story-flow test. CI runs tests before deploy.
-- Media pipeline: `npm run stills` (OpenRouter image API → `media-src/candidates/`), `npm run clips` (OpenRouter video API, Veo 3.1 Lite by default → `media-src/clips/`), `npm run media` (loop + compress + poster → `public/media/`). Prompts live in `VIDEO_PROMPTS.md`; key in `.env`.
+- Media pipeline, per chapter: `npm run stills -- --chapter <stem> [scene] [n]` (OpenRouter image API → `media-src/<stem>/candidates/`; pick winners into `media-src/<stem>/stills/`, anchor copy to `media-src/<stem>/ref/style.png`), `npm run clips -- --chapter <stem> [scene]` (OpenRouter video API, Veo 3.1 Lite → `media-src/<stem>/clips/`), `npm run media -- --chapter <stem>` (loop + compress + poster → `public/media/<stem>/`). Prompts live in the chapter JSON `media` block (stylePrefix, motionSuffix, anchor, scenes{still, motion, editOf}); `VIDEO_PROMPTS.md` is the workflow write-up only. Key in `.env`.
+- Library: with more than one `content/*.json` the app opens on a book picker; `?chapter=<stem>` deep-links. Chapter 2 (`chapter-02.json`, Coral and the Bubble Party, Reception–Year 1) proves the template; its curation ledger is `knowledge/Claude/curation-ledger.md`.
 - Task tracking: `Code.nosync/Workboard/Sayso/` (Obsidian vault). Session notes: `knowledge/Claude/{active,decisions,learnings}.md` — read `active.md` at session start.

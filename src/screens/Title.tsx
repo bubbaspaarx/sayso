@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { Chapter } from "../content/schema";
 
-export function Title({ chapter, onStart, onTripleTap }: { chapter: Chapter; onStart: () => void; onTripleTap: () => void }) {
+export function Title({ chapter, onStart, onTripleTap, onLibrary }: { chapter: Chapter; onStart: () => void; onTripleTap: () => void; onLibrary?: () => void }) {
   const taps = useRef<number[]>([]);
   const tap = () => {
     const now = Date.now();
@@ -27,6 +27,11 @@ export function Title({ chapter, onStart, onTripleTap }: { chapter: Chapter; onS
       <button className="btn btn-amber relative fade-up" onClick={onStart} autoFocus>
         Start reading
       </button>
+      {onLibrary && (
+        <button className="absolute left-5 top-[max(1rem,env(safe-area-inset-top))] rounded-full bg-white/8 px-4 py-2 text-sm font-bold text-white/55" onClick={onLibrary}>
+          ← Books
+        </button>
+      )}
     </div>
   );
 }

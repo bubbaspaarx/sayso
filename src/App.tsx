@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { loadChapter } from "./content/loadChapter";
+import { chapterSummaries, loadChapter } from "./content/loadChapter";
+import { Library } from "./screens/Library";
 import type { Chapter } from "./content/schema";
 import { initialState, reducer } from "./engine/story";
 import { WebSpeechSource } from "./speech/WebSpeechSource";
@@ -16,23 +17,28 @@ import { ReportScreen } from "./screens/Report";
 import { DebugPanel } from "./components/DebugPanel";
 
 const params = new URLSearchParams(window.location.search);
-const loaded = loadChapter(params.get("chapter") ?? "chapter-01");
 const SILENCE_MS = 2500;
+const summaries = chapterSummaries();
 
 export default function App() {
+  // One chapter → straight to its title. Several → library, unless ?chapter= names one.
+  const initial = params.get("chapter") ?? (summaries.length === 1 ? summaries[0].stem : null);
+  const [stem, setStem] = useState<string | null>(initial);
+  if (!stem) return <Library chapters={summaries} onPick={setStem} />;
+  const loaded = loadChapter(stem);
   if ("error" in loaded) {
     return (
-      <div className="flex h-full items-center justify-center p-10">
+      <div className="flex h-full flex-col items-center justify-center gap-6 p-10">
         <pre className="whitespace-pre-wrap rounded-xl bg-red-950/60 p-6 text-red-200">Chapter failed to load:{"\n"}{loaded.error}</pre>
+        <button className="btn btn-ghost" onClick={() => setStem(null)}>← Books</button>
       </div>
     );
   }
-  return <Reader />;
+  return <Reader key={stem} chapter={loaded.chapter} stem={stem} onLibrary={summaries.length > 1 ? () => setStem(null) : undefined} />;
 }
 
-function Reader() {
-  const chapter = (loaded as { chapter: Chapter }).chapter;
-  const [state, dispatch] = useReducer(reducer, chapter, (ch) => initialState(ch, params.get("debug") === "1"));
+function Reader({ chapter, stem, onLibrary }: { chapter: Chapter; stem: string; onLibrary?: () => void }) {
+  const [state, dispatch] = useReducer(reducer, chapter, (ch) => initialState(ch, params.get("debug") === "1", stem));
   const [status, setStatus] = useState<SpeechStatus>("stopped");
   const [transcript, setTranscript] = useState({ finalText: "", interimText: "" });
   const speech = useRef<SpeechSource | null>(null);
@@ -116,7 +122,7 @@ function Reader() {
   let view: React.ReactNode;
   switch (state.screen) {
     case "title":
-      view = <Title chapter={state.chapter} onStart={start} onTripleTap={() => dispatch({ type: "TOGGLE_DEBUG" })} />;
+      view = <Title chapter={state.chapter} onStart={start} onTripleTap={() => dispatch({ type: "TOGGLE_DEBUG" })} onLibrary={onLibrary} />;
       break;
     case "passage":
       view = (

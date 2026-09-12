@@ -34,6 +34,19 @@ export const PuzzleSchema = z.object({
   wrongFeedback: z.string(),
 });
 
+export const SceneMediaSchema = z.object({
+  still: z.string(),
+  motion: z.string(),
+  editOf: z.string().optional(), // generate as an edit of this scene's chosen still
+});
+
+export const MediaSchema = z.object({
+  stylePrefix: z.string(),
+  motionSuffix: z.string(),
+  anchor: z.string().optional(), // scene generated first; its still becomes the style reference
+  scenes: z.record(SceneMediaSchema),
+});
+
 export const ChapterSchema = z
   .object({
     id: z.string(),
@@ -45,6 +58,7 @@ export const ChapterSchema = z
     passages: z.record(PassageSchema),
     puzzles: z.record(PuzzleSchema),
     tolerantTokens: z.array(z.string()).optional(),
+    media: MediaSchema.optional(),
   })
   .superRefine((ch, ctx) => {
     const itemIds = new Set(ch.items.map((i) => i.id));
@@ -68,6 +82,16 @@ export const ChapterSchema = z
         }
       }
     }
+    if (ch.media) {
+      const used = new Set(Object.values(ch.passages).map((p) => p.scene));
+      for (const sc of used)
+        if (!ch.media.scenes[sc]) ctx.addIssue({ code: "custom", message: `media.scenes: no prompts for scene "${sc}"` });
+      for (const [sid, sc] of Object.entries(ch.media.scenes))
+        if (sc.editOf && !ch.media.scenes[sc.editOf])
+          ctx.addIssue({ code: "custom", message: `media.scenes.${sid}.editOf: unknown scene "${sc.editOf}"` });
+      if (ch.media.anchor && !ch.media.scenes[ch.media.anchor])
+        ctx.addIssue({ code: "custom", message: `media.anchor: unknown scene "${ch.media.anchor}"` });
+    }
     for (const [qid, q] of Object.entries(ch.puzzles)) {
       needPassage(q.onSuccess, `puzzles.${qid}.onSuccess`);
       needPassage(q.hintPassage, `puzzles.${qid}.hintPassage`);
@@ -82,3 +106,4 @@ export type Chapter = z.infer<typeof ChapterSchema>;
 export type Item = z.infer<typeof ItemSchema>;
 export type Passage = z.infer<typeof PassageSchema>;
 export type Puzzle = z.infer<typeof PuzzleSchema>;
+export type ChapterMedia = z.infer<typeof MediaSchema>;

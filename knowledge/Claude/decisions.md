@@ -20,3 +20,6 @@
 - **Don't raise similarity; make skips provisional and hold on re-reads.** The liberal feel came from one lucky word moving the cursor three ahead, not from fuzziness.
 - **Boots in the bedroom; cues (flash, not collect) for Grandma's three things.** First chime in passage one; the instruction passages now answer the reading without giving the puzzle away.
 - **Parked, not rejected:** word-triggered scene effects and small sound effects.
+- **A chapter is one JSON file, media prompts included.** `media` block in the chapter; scripts are chapter-aware (`--chapter`), sources and outputs live in per-chapter folders. Library screen when >1 chapter.
+- **Characters stay out of the backgrounds** even for the mermaid book (turtle from behind, shark asleep is fine). The text carries Coral and Splash; faces in loops drift.
+- **Same story template for chapter 2** (instructions → collect → fork → puzzle → payoff): it is what makes the pipeline repeatable, and the payoff pair (ship-door → ship-party) reuses the edit-of-anchor trick.
