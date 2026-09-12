@@ -89,7 +89,7 @@ export function DebugPanel({ state, speechName, status, restarts, finalText, int
           <div key={i}>{e}</div>
         ))}
       </div>
-      <div className="mt-2 text-white/40">keys: space = next word, enter = next/continue</div>
+      <div className="mt-2 text-white/40">keys: space = next word, x = mumble next word, enter = next/continue</div>
     </div>
   );
 }

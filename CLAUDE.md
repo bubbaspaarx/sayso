@@ -266,13 +266,28 @@ You cannot tune the aligner without this. Build it in the first session.
    and the stall is logged in the debug panel. The safety-valve completion
    rule never bypasses a gate.
 
+**2026-09-12 — after the first child read**
+
+4. **Skipped words are shown, and a corrected re-read recovers them.** The
+   cursor still moves on past a misread (skip allowance stays), but the word
+   gets a dotted rose underline. If the child then says that word (within ~12
+   tokens), it turns read without the cursor moving back. Recovery beats a
+   forward match that would need a skip; the exact next word still wins.
+5. **Reading report, adult-facing only.** Behind a small "For grown-ups"
+   button on the End screen, never on the child's path. Words heard / not
+   heard / corrected, accuracy, words to practise, and an *estimated*
+   full-stop pause count from per-word timestamps. "Copy details" dumps the
+   report plus the event log for pasting into a Claude session.
+6. **Keep listening after completion.** The safety-valve completion no longer
+   stops the engine, so a swallowed tail still gets credited.
+
 ## Where things are
 
 - `content/chapter-01.json` — the chapter. Any `content/*.json` is loadable via `?chapter=<stem>`.
 - `src/engine/` — `tokenise.ts`, `confusions.ts` (grow this from testing), `aligner.ts`, `story.ts` (reducer).
 - `src/speech/` — `SpeechSource.ts` interface, `WebSpeechSource.ts`, `TranscriptFeed.ts` (diffs interim/final into new tokens, 100ms debounce).
 - `src/screens/`, `src/components/` — UI. `src/media/mediaMap.ts` — scene → `public/media/<scene>.mp4|jpg`.
-- Debug panel: `?debug=1`, triple-tap the title, or Shift+D. Keys: space = pretend next word, Enter = Next/continue.
+- Debug panel: `?debug=1`, triple-tap the title, or Shift+D. Keys: space = pretend next word, x = pretend the next word was mumbled, Enter = Next/continue.
 - `npm test` runs the aligner fixtures and a full story-flow test. CI runs tests before deploy.
 - Media pipeline: `npm run stills` (OpenRouter image API → `media-src/candidates/`), `npm run clips` (OpenRouter video API, Veo 3.1 Lite by default → `media-src/clips/`), `npm run media` (loop + compress + poster → `public/media/`). Prompts live in `VIDEO_PROMPTS.md`; key in `.env`.
-- Task tracking: `Code.nosync/Workboard/Sayso/` (Obsidian vault).
+- Task tracking: `Code.nosync/Workboard/Sayso/` (Obsidian vault). Session notes: `knowledge/Claude/{active,decisions,learnings}.md` — read `active.md` at session start.

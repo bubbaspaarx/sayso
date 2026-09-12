@@ -1,0 +1,19 @@
+# Sayso — Decisions
+
+## 2026-09-10
+- **Web Speech API for v1, audio leaves the device.** Accepted for the prototype; on-device is a native Swift concern later. Criterion 6 reworded accordingly.
+- **GitHub Pages hosting.** iOS needs HTTPS for the mic. Hetzner/Heroku fallback.
+- **Pickup words are gates, never skipped.** User's call: going back later "feels like punishment"; the word is earned in the moment. Ordinary words keep the ≤2 hard-skip allowance; gate threshold loosens after 3/6 failed attempts instead of skipping.
+- **Weak matches only at the cursor.** A heard token ≤2 chars, or a soft target, cannot cause a hard-word skip. Found on the first real read.
+- **Stills through OpenRouter (Gemini 3.1 Flash Image), not Midjourney.** Midjourney has no free tier; OpenRouter uses the existing key and supports reference images for style lock and the dark→glow edit.
+- **Video through OpenRouter's video API (Veo 3.1 Lite), not Kling's site.** Kling refused free-tier image-to-video. Veo Lite: $0.24 per 8s 720p clip, ~1 min, composition holds.
+- **Ship loops now, not stills-only.** Total media ~6 MB, each loop <0.8 MB.
+
+## 2026-09-11
+- **Deploy on `master` as well as `main`.** Repo default branch is master.
+- **Actions bumped to Node-24 majors** (checkout v7, setup-node v7, upload-pages-artifact v5, deploy-pages v5).
+
+## 2026-09-12
+- **Misreads are shown, not punished.** Skip allowance stays; skipped words get a dotted rose underline; a corrected re-read recovers the word in place. Recovery beats a skip-based forward match.
+- **Report is for the adult, behind "For grown-ups".** Brief's "no metrics shown to the child" holds. Full-stop pauses are an estimate from word timestamps and labelled as such.
+- **Engine keeps listening after completion** so the swallowed tail is credited.

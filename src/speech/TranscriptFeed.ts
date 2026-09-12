@@ -12,7 +12,7 @@ export class TranscriptFeed {
   private prevAll: string[] = [];
   private pending: string[] = [];
   private pendingFinal = false;
-  private timer: number | null = null;
+  private timer: ReturnType<typeof setTimeout> | null = null;
   finalText = "";
   interimText = "";
 
@@ -37,17 +37,21 @@ export class TranscriptFeed {
     let lcp = 0;
     while (lcp < all.length && lcp < this.prevAll.length && all[lcp] === this.prevAll[lcp]) lcp++;
     const fresh = all.slice(lcp).slice(-12);
-    this.prevAll = all;
+    // A final that merely confirms the head of an interim we already fed must NOT
+    // shrink our memory, or the tail of that interim gets fed twice on the next event
+    // (that re-feed is what made the cursor hop into the next sentence on iOS).
+    const isPrefixOfFed = lcp === all.length && all.length <= this.prevAll.length;
+    if (!isPrefixOfFed) this.prevAll = all;
     if (fresh.length === 0 && !t.isFinal) return;
 
     this.pending.push(...fresh);
     this.pendingFinal = this.pendingFinal || t.isFinal;
-    if (t.isFinal) this.flush();
-    else if (this.timer === null) this.timer = window.setTimeout(() => this.flush(), this.debounceMs);
+    if (t.isFinal || this.debounceMs <= 0) this.flush();
+    else if (this.timer === null) this.timer = setTimeout(() => this.flush(), this.debounceMs);
   }
 
   private flush() {
-    if (this.timer !== null) window.clearTimeout(this.timer);
+    if (this.timer !== null) clearTimeout(this.timer);
     this.timer = null;
     const toks = this.pending;
     const isFinal = this.pendingFinal;

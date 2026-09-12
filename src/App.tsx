@@ -12,6 +12,7 @@ import { Choice } from "./screens/Choice";
 import { PuzzleScreen } from "./screens/Puzzle";
 import { Hint } from "./screens/Hint";
 import { End } from "./screens/End";
+import { ReportScreen } from "./screens/Report";
 import { DebugPanel } from "./components/DebugPanel";
 
 const params = new URLSearchParams(window.location.search);
@@ -42,8 +43,9 @@ function Reader() {
   useEffect(() => {
     const src = new WebSpeechSource();
     const f = new TranscriptFeed((tokens, isFinal) => {
-      lastHeardAt.current = Date.now();
-      dispatch({ type: "HEARD", tokens, isFinal });
+      const at = Date.now();
+      lastHeardAt.current = at;
+      dispatch({ type: "HEARD", tokens, isFinal, at });
     });
     src.onStatus(setStatus);
     src.onTranscript((t) => {
@@ -98,6 +100,9 @@ function Reader() {
         else if (state.screen === "puzzle" && state.puzzle?.success) dispatch({ type: "PUZZLE_CONTINUE" });
         else if (state.screen === "hint") dispatch({ type: "HINT_DISMISS" });
         else if (state.screen === "end") dispatch({ type: "RESTART" });
+        else if (state.screen === "report") dispatch({ type: "REPORT_CLOSE" });
+      } else if (e.key === "x") {
+        dispatch({ type: "DEBUG_SKIP" });
       } else if (e.key === "d" && e.shiftKey) {
         dispatch({ type: "TOGGLE_DEBUG" });
       }
@@ -141,7 +146,10 @@ function Reader() {
       view = <Hint state={state} onDismiss={() => dispatch({ type: "HINT_DISMISS" })} />;
       break;
     case "end":
-      view = <End onAgain={() => dispatch({ type: "RESTART" })} />;
+      view = <End onAgain={() => dispatch({ type: "RESTART" })} onReport={() => dispatch({ type: "REPORT_OPEN" })} />;
+      break;
+    case "report":
+      view = <ReportScreen state={state} onClose={() => dispatch({ type: "REPORT_CLOSE" })} />;
       break;
   }
 
