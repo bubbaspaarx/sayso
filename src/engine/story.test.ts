@@ -48,7 +48,7 @@ describe("story flow", () => {
     }
     expect(visited).toEqual(["p1", "p2", "p3", "p4", "p5", "p6", "p7"]);
     expect(s.debug.events.filter((e) => e.includes("gate stall"))).toEqual([]);
-    expect(s.bag).toEqual(["torch", "key", "lantern", "boots", "blanket", "song"]);
+    expect(s.bag).toEqual(["boots", "torch", "key", "lantern", "blanket", "song"]);
 
     // p8 has a choice
     expect(s.reading.passageId).toBe("p8");
@@ -129,11 +129,13 @@ describe("story flow", () => {
     }
     expect(s.reading.passageId).toBe("p3");
     s = readAll(s);
-    expect(s.bag).toEqual([]);
+    expect(s.bag).toEqual(["boots"]); // boots from p1 only — no lantern from Grandma's words
   });
 
   it("silence valve completes a passage with 2 trailing words unheard", () => {
     let s = reducer(initialState(chapter), { type: "START" });
+    s = readAll(s);
+    s = reducer(s, { type: "NEXT" }); // p2 has no pickup gates at its tail
     const n = s.reading.tokens.length;
     while (s.reading.cursor < n - 2) s = reducer(s, { type: "DEBUG_ADVANCE" });
     expect(s.reading.complete).toBe(false);

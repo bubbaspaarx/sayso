@@ -4,23 +4,52 @@
   "series": "Nell and the Night Garden — Reading Adventures",
   "readingLevel": "UK Year 2–3. Short sentences, mostly high-frequency words, a few sparkle words (greenhouse, lantern, jackdaws).",
   "start": "p1",
-  "tolerantTokens": ["luminis", "radix"],
-
-  "items": [
-    { "id": "lantern", "label": "Lantern", "emoji": "🏮" },
-    { "id": "torch",   "label": "Torch",   "emoji": "🔦" },
-    { "id": "key",     "label": "Key",     "emoji": "🗝️" },
-    { "id": "blanket", "label": "Blanket", "emoji": "🧣" },
-    { "id": "boots",   "label": "Boots",   "emoji": "🥾" },
-    { "id": "song",    "label": "Song",    "emoji": "🎵" }
+  "tolerantTokens": [
+    "luminis",
+    "radix"
   ],
-
+  "items": [
+    {
+      "id": "lantern",
+      "label": "Lantern",
+      "emoji": "🏮"
+    },
+    {
+      "id": "torch",
+      "label": "Torch",
+      "emoji": "🔦"
+    },
+    {
+      "id": "key",
+      "label": "Key",
+      "emoji": "🗝️"
+    },
+    {
+      "id": "blanket",
+      "label": "Blanket",
+      "emoji": "🧣"
+    },
+    {
+      "id": "boots",
+      "label": "Boots",
+      "emoji": "🥾"
+    },
+    {
+      "id": "song",
+      "label": "Song",
+      "emoji": "🎵"
+    }
+  ],
   "puzzles": {
     "greenhouse": {
       "id": "greenhouse",
       "type": "pick-set",
       "prompt": "Felix is cold. What does he need? Pick three.",
-      "correct": ["lantern", "blanket", "song"],
+      "correct": [
+        "lantern",
+        "blanket",
+        "song"
+      ],
       "pickCount": 3,
       "onSuccess": "p11",
       "hintAfterAttempts": 2,
@@ -28,98 +57,125 @@
       "wrongFeedback": "Nell thought again. What did Grandma Fen say?"
     }
   },
-
   "passages": {
     "p1": {
       "scene": "bedroom-dark",
-      "text": "Nell woke up in the middle of the night. Something was wrong. The garden was dark. It was never dark. Every night, the greenhouse glowed blue at the bottom of the garden. That was Felix. Tonight, the glow was gone.",
-      "next": "p2"
+      "text": "Nell woke up in the middle of the night. Something was wrong. The garden was dark. It was never dark. Every night, the greenhouse glowed blue at the bottom of the garden. That was Felix. Tonight, the glow was gone. Nell jumped out of bed and pulled on her boots.",
+      "next": "p2",
+      "pickups": [
+        {
+          "itemId": "boots",
+          "match": "boots"
+        }
+      ]
     },
-
     "p2": {
       "scene": "grandma-room",
       "text": "Nell ran to Grandma Fen's room. \"Grandma! Felix has stopped glowing!\" Grandma Fen sat up fast. \"Then he is cold,\" she said. \"A Luminis Radix must never get cold. Listen to me, Nell. This is important.\"",
       "next": "p3"
     },
-
     "p3": {
       "scene": "grandma-room",
       "text": "\"Felix needs three things when he is cold,\" said Grandma Fen. \"A lantern. A blanket. And a song. Not a torch. A lantern. Torches are too bright for him.\" Nell nodded. Lantern. Blanket. Song.",
-      "next": "p4"
+      "next": "p4",
+      "cues": [
+        {
+          "itemId": "lantern",
+          "match": "lantern"
+        },
+        {
+          "itemId": "blanket",
+          "match": "blanket"
+        },
+        {
+          "itemId": "song",
+          "match": "song"
+        }
+      ]
     },
-
     "p4": {
       "scene": "grandma-room",
       "text": "\"One more thing,\" said Grandma Fen. \"Go past the pond. Never go past the shed at night. That is where the jackdaws sleep, and they wake up very cross.\" \"Pond, not shed,\" said Nell. \"Go,\" said Grandma Fen.",
       "next": "p5"
     },
-
     "p5": {
       "scene": "kitchen-night",
       "text": "Nell ran to the kitchen. On the table was a torch. On the hook was a key. Nell looked. Then she saw it, by the door. The old yellow lantern. She picked it up. It was heavy and warm. \"One,\" said Nell.",
       "pickups": [
-        { "itemId": "torch",   "match": "torch" },
-        { "itemId": "key",     "match": "key" },
-        { "itemId": "lantern", "match": "lantern" }
+        {
+          "itemId": "torch",
+          "match": "torch"
+        },
+        {
+          "itemId": "key",
+          "match": "key"
+        },
+        {
+          "itemId": "lantern",
+          "match": "lantern"
+        }
       ],
       "next": "p6"
     },
-
     "p6": {
       "scene": "hall-night",
-      "text": "Next, the hall. Nell's boots were by the door. She put them on. Then she pulled the wool blanket off the big chair. It was soft and red. She held it tight. \"Two,\" said Nell.",
+      "text": "Next, the hall. Nell pulled the wool blanket off the big chair. It was soft and red. She held it tight. \"Two,\" said Nell.",
       "pickups": [
-        { "itemId": "boots",   "match": "boots" },
-        { "itemId": "blanket", "match": "blanket" }
+        {
+          "itemId": "blanket",
+          "match": "blanket"
+        }
       ],
       "next": "p7"
     },
-
     "p7": {
       "scene": "hall-night",
       "text": "The last thing was not in a room. It was in Nell's head. Grandma Fen sang it every night in the greenhouse. A little humming song. Nell hummed it now, very quietly, so she would not forget. \"Three,\" said Nell.",
       "pickups": [
-        { "itemId": "song", "match": "song" }
+        {
+          "itemId": "song",
+          "match": "song"
+        }
       ],
       "next": "p8"
     },
-
     "p8": {
       "scene": "garden-fork",
       "text": "Nell opened the back door. The garden was black. Cold air bit her nose. The path went two ways. Left, past the pond. Right, past the shed. Nell stopped. Which way had Grandma Fen said?",
       "choice": {
         "prompt": "Which way?",
         "options": [
-          { "label": "Past the pond", "next": "p9b" },
-          { "label": "Past the shed", "next": "p9a" }
+          {
+            "label": "Past the pond",
+            "next": "p9b"
+          },
+          {
+            "label": "Past the shed",
+            "next": "p9a"
+          }
         ]
       }
     },
-
     "p9a": {
       "scene": "shed-jackdaws",
       "text": "Nell went right, past the shed. Big mistake. The jackdaws woke up. CAW! CAW! CAW! Black wings flapped in her face. Nell ran back to the door as fast as she could. Her heart went thump, thump, thump. \"Not the shed,\" she said. \"The pond.\"",
       "next": "p8"
     },
-
     "p9b": {
       "scene": "pond-night",
       "text": "Nell went left, past the pond. The water was still and quiet. A frog plopped. That was all. She could see the greenhouse now. It was dark. Nell had never seen it dark before. She walked faster.",
       "next": "p10"
     },
-
     "p10": {
       "scene": "greenhouse-dark",
       "text": "Nell opened the greenhouse door. Inside, Felix was small and grey. His leaves hung down. He did not glow at all. \"Felix,\" Nell whispered. \"I'm here.\" She put her bag down. \"Now. What do you need?\"",
       "puzzle": "greenhouse"
     },
-
     "p11": {
       "scene": "greenhouse-glow",
       "text": "Nell lit the lantern. Soft yellow light filled the greenhouse. She tucked the blanket around Felix's pot. Then she hummed the little song. Slowly, slowly, a tiny blue light came on in his leaves. Then another. Then another. Felix glowed. \"There you are,\" said Nell.",
       "next": "p12"
     },
-
     "p12": {
       "scene": "greenhouse-glow",
       "text": "Behind her, the door opened. Grandma Fen stood there in her big coat, with two mugs of hot chocolate. \"Well done,\" she said. \"I knew you would remember.\" And they sat in the blue light together, until the sun came up."

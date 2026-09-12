@@ -10,6 +10,8 @@ export const PassageSchema = z.object({
   scene: z.string(),
   text: z.string(),
   pickups: z.array(z.object({ itemId: z.string(), match: z.string() })).optional(),
+  /** Reading `match` flashes the item briefly above the text. Not collected. */
+  cues: z.array(z.object({ itemId: z.string(), match: z.string() })).optional(),
   next: z.string().optional(),
   choice: z
     .object({
@@ -57,11 +59,13 @@ export const ChapterSchema = z
       if (p.choice) for (const o of p.choice.options) needPassage(o.next, `passages.${pid}.choice`);
       if (p.puzzle && !puzzleIds.has(p.puzzle))
         ctx.addIssue({ code: "custom", message: `passages.${pid}.puzzle: unknown puzzle "${p.puzzle}"` });
-      for (const pk of p.pickups ?? []) {
-        if (!itemIds.has(pk.itemId))
-          ctx.addIssue({ code: "custom", message: `passages.${pid}.pickups: unknown item "${pk.itemId}"` });
-        if (!p.text.toLowerCase().includes(pk.match.toLowerCase()))
-          ctx.addIssue({ code: "custom", message: `passages.${pid}.pickups: match "${pk.match}" not found in text` });
+      for (const [kind, list] of [["pickups", p.pickups], ["cues", p.cues]] as const) {
+        for (const pk of list ?? []) {
+          if (!itemIds.has(pk.itemId))
+            ctx.addIssue({ code: "custom", message: `passages.${pid}.${kind}: unknown item "${pk.itemId}"` });
+          if (!p.text.toLowerCase().includes(pk.match.toLowerCase()))
+            ctx.addIssue({ code: "custom", message: `passages.${pid}.${kind}: match "${pk.match}" not found in text` });
+        }
       }
     }
     for (const [qid, q] of Object.entries(ch.puzzles)) {

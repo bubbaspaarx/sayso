@@ -119,7 +119,14 @@ function Reader() {
       view = <Title chapter={state.chapter} onStart={start} onTripleTap={() => dispatch({ type: "TOGGLE_DEBUG" })} />;
       break;
     case "passage":
-      view = <Passage state={state} status={status} onNext={() => dispatch({ type: "NEXT" })} />;
+      view = (
+        <Passage
+          state={state}
+          status={status}
+          onNext={() => dispatch({ type: "NEXT" })}
+          onCueExpire={(now) => dispatch({ type: "CUE_EXPIRE", now })}
+        />
+      );
       break;
     case "choice":
       view = (

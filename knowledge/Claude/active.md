@@ -6,14 +6,14 @@ Reading MVP (Nell and the Cold Night). Brief + decisions log in `Sayso/CLAUDE.md
 _2026-09-12:_ first child read done (user's son, 7). Recognition "accurate to what a child says". Three defects found and fixed same day (next-sentence hop, uncredited tail, no misread feedback) and a reading report added for adults. **Uncommitted locally** — needs `git add -A && git commit && git push` to deploy.
 
 ## In Progress
-- Awaiting commit/push of the 2026-09-12 batch (feed fix, skipped highlight, recovery, report, tail credit, x key). 34 tests green, build clean.
+- Awaiting commit/push of the 2026-09-12 batch: feed fix, skipped highlight, recovery, report, tail credit, x key, provisional skips, re-read hold, boots→p1, cues in p3. 40 tests green, build clean.
 
 ## Next Steps
 1. Push the 2026-09-12 batch; re-read with the child; use End → For grown-ups → Copy details and paste the dump into the session (replaces hunting for the debug panel).
 2. Validate the full-stop pause estimate against what the adult saw; tune thresholds in `report.ts`.
 3. Grow `src/engine/confusions.ts` from the "words to practise" list where they are mishears, not misreads.
 4. Rotate the OpenRouter key.
-5. Parked: "more interactions and continuation elements"; native Swift prototype.
+5. Parked (user likes both, thinking): word-triggered scene effects; small sound effects. Also "continuation elements"; native Swift prototype.
 
 ## Blockers
 - (none) — everything else waits on a child and an iPad.

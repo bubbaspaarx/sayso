@@ -5,16 +5,18 @@ import { SceneMedia } from "../components/SceneMedia";
 import { WordText } from "../components/WordText";
 import { Bag } from "../components/Bag";
 import { MicIndicator } from "../components/MicIndicator";
+import { CueStrip } from "../components/CueStrip";
 
 type Props = {
   state: State;
   status: SpeechStatus;
   onNext: () => void;
+  onCueExpire?: (now: number) => void;
   dim?: boolean;
   overlay?: ReactNode;
 };
 
-export function Passage({ state, status, onNext, dim = false, overlay }: Props) {
+export function Passage({ state, status, onNext, onCueExpire = () => {}, dim = false, overlay }: Props) {
   const passage = state.chapter.passages[state.reading.passageId];
   return (
     <div className="relative h-full overflow-hidden">
@@ -25,6 +27,7 @@ export function Passage({ state, status, onNext, dim = false, overlay }: Props) 
       <div className="absolute inset-0 z-10 flex flex-col">
         <div className="flex flex-1 items-end justify-center px-[6vw] pb-6 pt-20">
           <div className="w-full max-w-[1100px]">
+            <CueStrip chapter={state.chapter} cues={state.reading.cues} onExpire={onCueExpire} />
             <WordText reading={state.reading} dim={dim} />
           </div>
         </div>

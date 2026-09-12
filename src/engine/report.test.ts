@@ -13,7 +13,7 @@ function say(s: State, words: string, at: number): State {
 describe("skipped words, recovery, and the report", () => {
   it("marks a passed-over word as skipped and shows it in the report", () => {
     let s = reducer(initialState(chapter), { type: "START" }); // p1: "Nell woke up in the middle of the night. Something was wrong..."
-    s = say(s, "nell woke up in the middle of the night something wrong", 1000);
+    s = say(s, "nell woke up in the middle of the night something wrong the", 1000);
     const wasIdx = s.reading.tokens.findIndex((t) => t.norm === "was");
     expect(s.reading.skipped.has(wasIdx)).toBe(true);
     expect(s.reading.matched.has(wasIdx)).toBe(false);
@@ -21,7 +21,7 @@ describe("skipped words, recovery, and the report", () => {
 
   it("a corrected re-read recovers the skipped word without moving the cursor", () => {
     let s = reducer(initialState(chapter), { type: "START" });
-    s = say(s, "nell woke up in the middle of the night something wrong", 1000);
+    s = say(s, "nell woke up in the middle of the night something wrong the", 1000);
     const cursor = s.reading.cursor;
     s = say(s, "was", 1800); // adult: "look again — 'was'"; child repeats it
     const wasIdx = s.reading.tokens.findIndex((t) => t.norm === "was");

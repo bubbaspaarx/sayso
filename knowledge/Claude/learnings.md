@@ -10,6 +10,10 @@
 - A corrected re-read of a skipped word often also matches the same word a little further ahead (e.g. "was" twice in two sentences). Check recently-skipped words first; only let the forward aligner see it if it is the exact next word.
 - Per-word timestamps are only meaningful between different transcript events; tokens in one HEARD batch share a time. Tag matches with a batch id and skip same-batch gaps.
 
+- Provisional-skip rule needs three cases: same-batch confirmation (skip then next word in one batch → commit now), cross-batch confirmation (first *matched* decision of the next batch is index+1, ignore leading noise), and pickup-word exemption (a gate word is distinctive enough to trust).
+- Any test that ends a heard batch on a skip now sees no cursor movement — append the confirming word.
+- isComplete refuses while a gate remains, so a passage whose last word is a pickup (p1 "boots") can't use the silence valve. Tests for the valve must use a gate-free passage.
+
 ## Image generation (OpenRouter image API)
 - Gemini 3.1 Flash Image at ~$0.07/image is good enough for storybook stills; ~$1.85 for nine scenes incl. rejects.
 - Say "full-bleed, no border, no frame, no paper edge" or ~half the outputs come with a sketchbook border.

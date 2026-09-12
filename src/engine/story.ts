@@ -17,6 +17,9 @@ export type Reading = {
   matchedAt: Map<number, { t: number; batch: number }>;
   stalls: Map<number, number>; // gate index → max attempts
   firedPickups: Set<string>; // item ids fired on this visit
+  /** A skip-based match waiting for the next word to confirm it. */
+  provisional: { index: number; skipped: number[]; cursorBefore: number } | null;
+  cues: { itemId: string; at: number }[];
   complete: boolean;
   silenceMs: number;
   gateStall: { index: number; attempts: number } | null;
@@ -62,6 +65,7 @@ export type Action =
   | { type: "RESTART" }
   | { type: "PICK_ANIM_DONE" }
   | { type: "TOGGLE_DEBUG" }
+  | { type: "CUE_EXPIRE"; now: number }
   | { type: "REPORT_OPEN" }
   | { type: "REPORT_CLOSE" }
   | { type: "DEBUG_ADVANCE" }
@@ -77,6 +81,22 @@ function gateThreshold(stall: Reading["gateStall"]): number {
   let thr = DEFAULT_ALIGN.gateSimilarity;
   for (const step of GATE_LOOSEN) if (stall.attempts >= step.attempts) thr = step.threshold;
   return thr;
+}
+
+/** Greedy monotonic count of heard tokens that fit the already-read window [lo, hi). */
+function countBehindMatches(tokens: Token[], lo: number, hi: number, heard: string[]): number {
+  let p = lo;
+  let n = 0;
+  for (const h of heard) {
+    for (let j = p; j < hi; j++) {
+      if (matches(h, tokens[j].norm, 0.75)) {
+        n++;
+        p = j + 1;
+        break;
+      }
+    }
+  }
+  return n;
 }
 
 export function enterPassage(chapter: Chapter, passageId: string): Reading {
@@ -97,6 +117,8 @@ export function enterPassage(chapter: Chapter, passageId: string): Reading {
     matchedAt: new Map(),
     stalls: new Map(),
     firedPickups: new Set(),
+    provisional: null,
+    cues: [],
     complete: tokens.length === 0,
     silenceMs: 0,
     gateStall: null,
@@ -194,16 +216,74 @@ function applyHeard(state: State, tokens: string[], isFinal: boolean, at = Date.
     } else forward.push(h);
   }
 
-  const result = align(r.tokens, r.cursor, forward, {
-    ...DEFAULT_ALIGN,
-    gateSimilarity: gateThreshold(r.gateStall),
-  });
+  const opts = { ...DEFAULT_ALIGN, gateSimilarity: gateThreshold(r.gateStall) };
+  let debug: DebugInfo = { ...state.debug };
+
+  // A pending skip-based match is confirmed only if this batch's first real match is
+  // the very next word after it. Otherwise it is discarded and we align from before it.
+  let result: AlignResult;
+  let baseCursor = r.cursor;
+  let provisional = r.provisional;
+  if (provisional) {
+    const confirm = align(r.tokens, provisional.index + 1, forward, opts);
+    const firstMatch = confirm.decisions.find((d) => d.expectedIndex !== null);
+    if (firstMatch && firstMatch.expectedIndex === provisional.index + 1 && !(firstMatch.skipped?.length)) {
+      matched.add(provisional.index);
+      matchedAt.set(provisional.index, { t: at, batch });
+      for (const i of provisional.skipped) if (!matched.has(i)) skipped.add(i);
+      result = confirm;
+      baseCursor = provisional.index + 1;
+      debug = log(debug, `confirmed skip → "${r.tokens[provisional.index].norm}"`);
+    } else {
+      result = align(r.tokens, r.cursor, forward, opts);
+      debug = log(debug, `dropped unconfirmed skip → "${r.tokens[provisional.index].norm}"`);
+    }
+    provisional = null;
+  } else {
+    result = align(r.tokens, r.cursor, forward, opts);
+  }
+
+  // Re-read detection: if these words fit better behind the cursor than ahead of it,
+  // the child is reading back over something already read. Hold still.
+  if (forward.length >= 2) {
+    const behind = countBehindMatches(r.tokens, Math.max(0, baseCursor - 12), baseCursor, forward);
+    if (behind >= 2 && behind > result.matched.length) {
+      debug = log(debug, `re-read (${behind} behind vs ${result.matched.length} ahead) — holding`);
+      result = { cursor: baseCursor, matched: [], decisions: forward.map((h) => ({ heard: h, expectedIndex: null })), blockedByGate: null };
+    }
+  }
+
+  // The last match of a batch that needed a hard skip is provisional: the cursor waits
+  // for the next word to agree. One lucky word must not drag the story forward.
+  const matchedDecisions = result.decisions.filter((d) => d.expectedIndex !== null);
+  const last = matchedDecisions[matchedDecisions.length - 1];
+  if (last && last.expectedIndex !== null && !r.tokens[last.expectedIndex].gate && (last.skipped ?? []).some((i) => !r.tokens[i].soft)) {
+    const prev = matchedDecisions[matchedDecisions.length - 2];
+    const cursorBefore = prev && prev.expectedIndex !== null ? prev.expectedIndex + 1 : baseCursor;
+    provisional = { index: last.expectedIndex, skipped: last.skipped ?? [], cursorBefore };
+    result = {
+      ...result,
+      cursor: cursorBefore,
+      matched: result.matched.filter((m) => m !== last.expectedIndex),
+      decisions: result.decisions.map((d) => (d === last ? { ...d, expectedIndex: null, via: undefined, provisional: true } : d)),
+    };
+    debug = log(debug, `provisional skip → "${r.tokens[last.expectedIndex].norm}" (waiting for "${r.tokens[last.expectedIndex + 1]?.norm ?? "end"}")`);
+  }
+
   result.matched.forEach((m) => {
     matched.add(m);
     matchedAt.set(m, { t: at, batch });
   });
   // Words the cursor passed without hearing them.
-  for (const d of result.decisions) for (const i of d.skipped ?? []) if (!matched.has(i)) skipped.add(i);
+  for (const d of result.decisions) if (d.expectedIndex !== null) for (const i of d.skipped ?? []) if (!matched.has(i)) skipped.add(i);
+
+  // Cues: reading a cue word flashes its item above the text (not collected).
+  const passage = state.chapter.passages[r.passageId];
+  let cues = r.cues;
+  for (const cue of passage.cues ?? []) {
+    const hit = result.matched.some((m) => r.tokens[m].norm === cue.match.toLowerCase());
+    if (hit) cues = [...cues, { itemId: cue.itemId, at }].slice(-8);
+  }
 
   // Gate stall bookkeeping: count final utterances that failed to pass the gate.
   // An "attempt" is a final utterance that ended with unmatched words while parked on the gate.
@@ -222,11 +302,10 @@ function applyHeard(state: State, tokens: string[], isFinal: boolean, at = Date.
   if (gateStall && gateStall.attempts > 0) stalls.set(gateStall.index, Math.max(stalls.get(gateStall.index) ?? 0, gateStall.attempts));
 
   // Pickups: fire for gate tokens matched in this call, once per visit.
-  const passage = state.chapter.passages[r.passageId];
   let bag = state.bag;
   let justPicked = state.justPicked;
   const fired = new Set(r.firedPickups);
-  let debug: DebugInfo = { ...state.debug, lastAlignment: result };
+  debug = { ...debug, lastAlignment: result };
   for (const pk of passage.pickups ?? []) {
     if (fired.has(pk.itemId)) continue;
     const tok = r.tokens.find((t) => t.gate && t.norm === pk.match.toLowerCase());
@@ -251,13 +330,15 @@ function applyHeard(state: State, tokens: string[], isFinal: boolean, at = Date.
     batch,
     reading: {
       ...r,
-      cursor: Math.max(r.cursor, result.cursor),
+      cursor: Math.max(baseCursor === r.cursor ? r.cursor : 0, result.cursor),
       matched,
       matchedAt,
       skipped,
       recovered,
       stalls,
       firedPickups: fired,
+      provisional,
+      cues,
       silenceMs: 0,
       gateStall,
       complete,
@@ -352,6 +433,11 @@ export function reducer(state: State, action: Action): State {
 
     case "TOGGLE_DEBUG":
       return { ...state, debugPanel: !state.debugPanel };
+
+    case "CUE_EXPIRE": {
+      const cues = state.reading.cues.filter((c) => action.now - c.at < 2600);
+      return cues.length === state.reading.cues.length ? state : { ...state, reading: { ...state.reading, cues } };
+    }
 
     case "REPORT_OPEN":
       return state.screen === "end" ? { ...state, screen: "report" } : state;

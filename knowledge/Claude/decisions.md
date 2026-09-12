@@ -17,3 +17,6 @@
 - **Misreads are shown, not punished.** Skip allowance stays; skipped words get a dotted rose underline; a corrected re-read recovers the word in place. Recovery beats a skip-based forward match.
 - **Report is for the adult, behind "For grown-ups".** Brief's "no metrics shown to the child" holds. Full-stop pauses are an estimate from word timestamps and labelled as such.
 - **Engine keeps listening after completion** so the swallowed tail is credited.
+- **Don't raise similarity; make skips provisional and hold on re-reads.** The liberal feel came from one lucky word moving the cursor three ahead, not from fuzziness.
+- **Boots in the bedroom; cues (flash, not collect) for Grandma's three things.** First chime in passage one; the instruction passages now answer the reading without giving the puzzle away.
+- **Parked, not rejected:** word-triggered scene effects and small sound effects.

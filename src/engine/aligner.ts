@@ -21,6 +21,7 @@ export type MatchDecision = {
   expected?: string;
   via?: "exact" | "fuzzy" | "confusable" | "plural";
   skipped?: number[]; // expected indices skipped to reach this match
+  provisional?: boolean; // matched via a skip, held back until the next word confirms
 };
 
 export type AlignResult = {

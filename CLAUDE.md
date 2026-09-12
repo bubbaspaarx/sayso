@@ -57,6 +57,7 @@ type Passage = {
   scene: string;                       // key into media map (video loop or still)
   text: string;                        // exactly what the child reads
   pickups?: { itemId: string; match: string }[]; // fire when `match` token is READ in this passage
+  cues?: { itemId: string; match: string }[];    // flash the item above the text when read; not collected
   next?: string;                       // linear continuation
   choice?: {                           // branch — shown after passage is read
     prompt: string;
@@ -280,6 +281,16 @@ You cannot tune the aligner without this. Build it in the first session.
    report plus the event log for pasting into a Claude session.
 6. **Keep listening after completion.** The safety-valve completion no longer
    stops the engine, so a swallowed tail still gets credited.
+7. **Skips are provisional; re-reads hold.** Similarity thresholds stay as they
+   are. A batch's last match that needed a hard skip does not move the cursor
+   until the next batch's first match is the very next word (pickup words
+   exempt). A batch that fits better behind the cursor than ahead is a re-read
+   and the cursor holds.
+8. **Pickups spread out; cues added.** Boots are collected in the bedroom so the
+   first chime comes in the first passage. New passage field `cues`: reading
+   the word flashes the item above the text for ~2.5s, nothing goes in the bag.
+   Used for Grandma's "Lantern. Blanket. Song." Parked ideas: word-triggered
+   scene effects, small sound effects.
 
 ## Where things are
 
