@@ -47,6 +47,20 @@ export const MediaSchema = z.object({
   scenes: z.record(SceneMediaSchema),
 });
 
+export const YEARS = ["R", "1", "2", "3", "4", "5", "6"] as const;
+export const BANDS = ["beginner", "secure", "advanced"] as const;
+export type Year = (typeof YEARS)[number];
+export type Band = (typeof BANDS)[number];
+
+/** A reading level: the same story with the child's line rewritten per passage. */
+export const LevelSchema = z.object({
+  year: z.enum(YEARS),
+  band: z.enum(BANDS),
+  label: z.string().optional(),
+  /** Per-passage overrides. `text` replaces the child's line; `narration` is the grown-up line (never listened for). */
+  passages: z.record(z.object({ text: z.string().optional(), narration: z.string().optional() })).optional(),
+});
+
 export const ChapterSchema = z
   .object({
     id: z.string(),
@@ -59,6 +73,8 @@ export const ChapterSchema = z
     puzzles: z.record(PuzzleSchema),
     tolerantTokens: z.array(z.string()).optional(),
     media: MediaSchema.optional(),
+    levels: z.record(LevelSchema).optional(),
+    defaultLevel: z.string().optional(),
   })
   .superRefine((ch, ctx) => {
     const itemIds = new Set(ch.items.map((i) => i.id));
@@ -79,6 +95,23 @@ export const ChapterSchema = z
             ctx.addIssue({ code: "custom", message: `passages.${pid}.${kind}: unknown item "${pk.itemId}"` });
           if (!p.text.toLowerCase().includes(pk.match.toLowerCase()))
             ctx.addIssue({ code: "custom", message: `passages.${pid}.${kind}: match "${pk.match}" not found in text` });
+        }
+      }
+    }
+    if (ch.levels) {
+      if (ch.defaultLevel && !ch.levels[ch.defaultLevel])
+        ctx.addIssue({ code: "custom", message: `defaultLevel: unknown level "${ch.defaultLevel}"` });
+      for (const [lid, lv] of Object.entries(ch.levels)) {
+        for (const [pid, ov] of Object.entries(lv.passages ?? {})) {
+          const p = ch.passages[pid];
+          if (!p) { ctx.addIssue({ code: "custom", message: `levels.${lid}: unknown passage "${pid}"` }); continue; }
+          if (ov.text) {
+            const low = ov.text.toLowerCase();
+            for (const [kind, list] of [["pickups", p.pickups], ["cues", p.cues]] as const)
+              for (const pk of list ?? [])
+                if (!low.includes(pk.match.toLowerCase()))
+                  ctx.addIssue({ code: "custom", message: `levels.${lid}.${pid}: ${kind} word "${pk.match}" missing from the child's text` });
+          }
         }
       }
     }
@@ -107,3 +140,4 @@ export type Item = z.infer<typeof ItemSchema>;
 export type Passage = z.infer<typeof PassageSchema>;
 export type Puzzle = z.infer<typeof PuzzleSchema>;
 export type ChapterMedia = z.infer<typeof MediaSchema>;
+export type Level = z.infer<typeof LevelSchema>;

@@ -23,3 +23,8 @@
 - **A chapter is one JSON file, media prompts included.** `media` block in the chapter; scripts are chapter-aware (`--chapter`), sources and outputs live in per-chapter folders. Library screen when >1 chapter.
 - **Characters stay out of the backgrounds** even for the mermaid book (turtle from behind, shark asleep is fine). The text carries Coral and Splash; faces in loops drift.
 - **Same story template for chapter 2** (instructions → collect → fork → puzzle → payoff): it is what makes the pipeline repeatable, and the payoff pair (ship-door → ship-party) reuses the edit-of-anchor trick.
+
+## 2026-09-13
+- **Levels = school year × Beginner/Secure/Advanced**, per the curriculum's year structure; key stage is too coarse. Profile saved on the device; nearest-level fallback.
+- **Grown-up line (`narration`)** carries the story at beginner levels; the engine never listens for it. Pickup/cue words must survive every level (validated).
+- Decodability enforcement deferred to its own task; the daughter's read showed it is the real constraint.

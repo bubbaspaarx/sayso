@@ -3,11 +3,13 @@ import { align, isComplete, DEFAULT_ALIGN, type AlignResult } from "./aligner";
 import { buildTokens, splitWords, type Token, type Word } from "./tokenise";
 import { matches } from "./aligner";
 import type { PassageRecord } from "./report";
+import { levelText } from "../content/levels";
 
 export type Screen = "title" | "passage" | "choice" | "puzzle" | "hint" | "end" | "report";
 
 export type Reading = {
   passageId: string;
+  narration?: string; // grown-up line; never listened for
   words: Word[];
   tokens: Token[];
   cursor: number;
@@ -42,6 +44,7 @@ export type DebugInfo = {
 export type State = {
   chapter: Chapter;
   stem: string; // content/<stem>.json — also the media folder
+  levelId: string | null;
   screen: Screen;
   reading: Reading;
   bag: string[];
@@ -100,15 +103,17 @@ function countBehindMatches(tokens: Token[], lo: number, hi: number, heard: stri
   return n;
 }
 
-export function enterPassage(chapter: Chapter, passageId: string): Reading {
+export function enterPassage(chapter: Chapter, passageId: string, levelId: string | null = null): Reading {
   const passage: Passage = chapter.passages[passageId];
-  const words = splitWords(passage.text);
+  const { text, narration } = levelText(chapter, levelId, passageId);
+  const words = splitWords(text);
   const tokens = buildTokens(words, {
     tolerant: chapter.tolerantTokens,
     gateWords: (passage.pickups ?? []).map((p) => p.match),
   });
   return {
     passageId,
+    narration,
     words,
     tokens,
     cursor: 0,
@@ -126,12 +131,13 @@ export function enterPassage(chapter: Chapter, passageId: string): Reading {
   };
 }
 
-export function initialState(chapter: Chapter, debugPanel = false, stem = "chapter-01"): State {
+export function initialState(chapter: Chapter, debugPanel = false, stem = "chapter-01", levelId: string | null = null): State {
   return {
     chapter,
     stem,
+    levelId,
     screen: "title",
-    reading: enterPassage(chapter, chapter.start),
+    reading: enterPassage(chapter, chapter.start, levelId),
     bag: [],
     justPicked: null,
     puzzle: null,
@@ -180,7 +186,7 @@ function goTo(state: State, passageId: string): State {
   return {
     ...state,
     screen: "passage",
-    reading: enterPassage(state.chapter, passageId),
+    reading: enterPassage(state.chapter, passageId, state.levelId),
     debug: log(state.debug, `→ passage ${passageId}`),
   };
 }
@@ -431,7 +437,7 @@ export function reducer(state: State, action: Action): State {
       return state.justPicked ? { ...state, justPicked: null } : state;
 
     case "RESTART":
-      return { ...initialState(state.chapter, state.debugPanel, state.stem), debug: log(state.debug, "restart") };
+      return { ...initialState(state.chapter, state.debugPanel, state.stem, state.levelId), debug: log(state.debug, "restart") };
 
     case "TOGGLE_DEBUG":
       return { ...state, debugPanel: !state.debugPanel };

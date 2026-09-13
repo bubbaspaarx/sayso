@@ -49,6 +49,11 @@ type Chapter = {
   passages: Record<string, Passage>;
   puzzles: Record<string, Puzzle>;
   tolerantTokens?: string[];           // hard proper nouns the aligner may skip freely
+  levels?: Record<string, {            // same story at several reading levels; scenes/items/pickups shared
+    year: "R"|"1"|"2"|"3"|"4"|"5"|"6"; band: "beginner"|"secure"|"advanced"; label?: string;
+    passages?: Record<string, { text?: string; narration?: string }>; // text = child's line; narration = grown-up line, never listened for
+  }>;
+  defaultLevel?: string;
   media?: {                            // everything the media scripts need — a chapter is ONE file
     stylePrefix: string; motionSuffix: string; anchor?: string;
     scenes: Record<string, { still: string; motion: string; editOf?: string }>;
@@ -295,6 +300,22 @@ You cannot tune the aligner without this. Build it in the first session.
    the word flashes the item above the text for ~2.5s, nothing goes in the bag.
    Used for Grandma's "Lantern. Blanket. Song." Parked ideas: word-triggered
    scene effects, small sound effects.
+
+**2026-09-13 — after the daughter's first read**
+
+9. **Reading levels are year × band, not key stage.** Follows the national
+   curriculum's programme-of-study structure (R, Y1–Y6) with a Beginner →
+   Advanced slider inside the year, because a child's level moves a lot within
+   one school year. Saved on the device as the reader profile; a book opens at
+   the nearest level it has.
+10. **Two-tier text.** A level may give a passage a `narration` line (grown-up
+   reads, small and dim, never listened for) above the child's `text`. This is
+   how a beginner level keeps the story while cutting the decoding load; it is
+   the phonics-scheme page layout. Pickup and cue words must stay in the child's
+   text at every level — the validator enforces it.
+11. **Decodability is the real constraint for early readers**, not length.
+   Curriculum text saved in `knowledge/curriculum/`; a per-level vocabulary
+   check is the next step (Workboard).
 
 ## Where things are
 

@@ -224,5 +224,13 @@
         "motion": "Blue glow breathes gently, brightening and dimming on a slow cycle. Lantern flame flickers. Tiny motes of blue light rise from the leaves."
       }
     }
-  }
+  },
+  "levels": {
+    "y2-secure": {
+      "year": "2",
+      "band": "secure",
+      "label": "Year 2 · Secure"
+    }
+  },
+  "defaultLevel": "y2-secure"
 }

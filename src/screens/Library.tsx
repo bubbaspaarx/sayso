@@ -1,7 +1,18 @@
 import type { ChapterSummary } from "../content/loadChapter";
 import { mediaFor } from "../media/mediaMap";
+import { LevelPicker } from "../components/LevelPicker";
+import { bandLabel, yearLabel, type Profile } from "../content/levels";
+import type { Year } from "../content/schema";
 
-export function Library({ chapters, onPick }: { chapters: ChapterSummary[]; onPick: (stem: string) => void }) {
+type Props = {
+  chapters: ChapterSummary[];
+  profile: Profile;
+  onProfile: (p: Profile) => void;
+  onPick: (stem: string) => void;
+};
+
+export function Library({ chapters, profile, onProfile, onPick }: Props) {
+  const years = [...new Set(chapters.flatMap((c) => c.years))] as Year[];
   return (
     <div className="relative flex h-full flex-col items-center justify-center gap-10 overflow-y-auto px-8 py-10">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,#1a2b5e_0%,#0b1530_55%,#060c1f_100%)]" />
@@ -10,6 +21,9 @@ export function Library({ chapters, onPick }: { chapters: ChapterSummary[]; onPi
         <h1 className="font-extrabold text-amber-soft" style={{ fontSize: "clamp(36px, 5vw, 64px)" }}>
           Pick a book
         </h1>
+      </div>
+      <div className="relative w-[min(880px,90vw)] fade-up">
+        <LevelPicker profile={profile} onChange={onProfile} availableYears={years} />
       </div>
       <div className="relative flex flex-wrap items-stretch justify-center gap-8 fade-up">
         {chapters.map((c) => (
@@ -33,7 +47,11 @@ export function Library({ chapters, onPick }: { chapters: ChapterSummary[]; onPi
             <div className="p-5">
               <div className="text-sm font-bold uppercase tracking-[0.2em] text-white/45">{c.series}</div>
               <div className="mt-1 text-3xl font-extrabold text-amber-soft">{c.title}</div>
-              {c.readingLevel && <div className="mt-2 text-sm text-white/55">{c.readingLevel.split(".")[0]}</div>}
+              <div className="mt-2 text-sm text-white/55">
+                {c.opensAt ? (
+                  <>Opens at <b className="text-amber-soft">{yearLabel(c.opensAt.year)} · {bandLabel(c.opensAt.band)}</b></>
+                ) : c.readingLevel ? c.readingLevel.split(".")[0] : null}
+              </div>
             </div>
           </button>
         ))}

@@ -19,7 +19,11 @@ export function ReportScreen({ state, onClose }: { state: State; onClose: () => 
     <div className="relative h-full overflow-y-auto bg-navy px-[6vw] py-8 text-white">
       <div className="mx-auto max-w-[900px] fade-up">
         <div className="mb-1 text-sm font-bold uppercase tracking-[0.25em] text-white/45">For grown-ups</div>
-        <h1 className="mb-6 text-4xl font-extrabold text-amber-soft">Reading report</h1>
+        <h1 className="mb-1 text-4xl font-extrabold text-amber-soft">Reading report</h1>
+        <div className="mb-6 text-white/55">
+          {state.chapter.title}
+          {state.levelId && state.chapter.levels?.[state.levelId]?.label ? ` · ${state.chapter.levels[state.levelId].label}` : ""}
+        </div>
 
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <Stat label="Words heard" value={`${r.heard}`} sub={`of ${r.totalWords}`} />

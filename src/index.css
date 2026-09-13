@@ -92,3 +92,13 @@ body {
 .btn-amber { background: var(--color-amber); color: var(--color-navy-deep); }
 .btn-ghost { background: rgba(255,255,255,0.10); color: #fff; border: 2px solid rgba(255,255,255,0.35); }
 .btn:disabled { opacity: 0.35; pointer-events: none; }
+
+/* Beginner → Advanced slider */
+.level-slider { -webkit-appearance: none; appearance: none; height: 44px; background: transparent; }
+.level-slider::-webkit-slider-runnable-track { height: 8px; border-radius: 999px; background: linear-gradient(90deg, rgba(255,255,255,0.18), var(--color-amber)); }
+.level-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 32px; margin-top: -12px; border-radius: 999px; background: var(--color-amber); border: 3px solid var(--color-navy-deep); box-shadow: 0 0 0 2px var(--color-amber); }
+.level-slider::-moz-range-track { height: 8px; border-radius: 999px; background: linear-gradient(90deg, rgba(255,255,255,0.18), var(--color-amber)); }
+.level-slider::-moz-range-thumb { width: 32px; height: 32px; border-radius: 999px; background: var(--color-amber); border: 3px solid var(--color-navy-deep); }
+.level-slider:focus-visible { outline: 2px solid var(--color-amber-soft); outline-offset: 4px; border-radius: 999px; }
+
+.narration { color: rgba(255,255,255,0.62); font-size: clamp(18px, 1.9vw, 24px); line-height: 1.5; font-weight: 600; }

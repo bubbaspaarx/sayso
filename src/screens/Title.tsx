@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { Chapter } from "../content/schema";
 
-export function Title({ chapter, onStart, onTripleTap, onLibrary }: { chapter: Chapter; onStart: () => void; onTripleTap: () => void; onLibrary?: () => void }) {
+export function Title({ chapter, levelLabel, onStart, onTripleTap, onLibrary }: { chapter: Chapter; levelLabel?: string; onStart: () => void; onTripleTap: () => void; onLibrary?: () => void }) {
   const taps = useRef<number[]>([]);
   const tap = () => {
     const now = Date.now();
@@ -23,6 +23,7 @@ export function Title({ chapter, onStart, onTripleTap, onLibrary }: { chapter: C
         >
           {chapter.title}
         </h1>
+        {levelLabel && <div className="mt-4 text-lg font-bold text-white/55">{levelLabel}</div>}
       </div>
       <button className="btn btn-amber relative fade-up" onClick={onStart} autoFocus>
         Start reading

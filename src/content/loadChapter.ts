@@ -1,4 +1,5 @@
-import { ChapterSchema, type Chapter } from "./schema";
+import { ChapterSchema, type Chapter, type Year } from "./schema";
+import { levelsOf, pickLevel, type Profile } from "./levels";
 
 // Every JSON in content/ is a candidate. Pick by ?chapter=<file stem>; default chapter-01.
 const files = import.meta.glob("../../content/*.json", { eager: true, import: "default" }) as Record<string, unknown>;
@@ -9,15 +10,23 @@ export function listChapters(): string[] {
   return Object.keys(files).map(stemOf).sort();
 }
 
-export type ChapterSummary = { stem: string; title: string; series: string; readingLevel?: string; coverScene: string; ok: boolean };
+export type ChapterSummary = {
+  stem: string; title: string; series: string; readingLevel?: string; coverScene: string; ok: boolean;
+  years: Year[]; opensAt?: { year: Year; band: Profile["band"] };
+};
 
 /** Lightweight entries for the library screen. */
-export function chapterSummaries(): ChapterSummary[] {
+export function chapterSummaries(profile?: Profile): ChapterSummary[] {
   return listChapters().map((stem) => {
     const r = loadChapter(stem);
-    if ("error" in r) return { stem, title: stem, series: "", coverScene: "", ok: false };
+    if ("error" in r) return { stem, title: stem, series: "", coverScene: "", ok: false, years: [] };
     const ch = r.chapter;
-    return { stem, title: ch.title, series: ch.series, readingLevel: ch.readingLevel, coverScene: ch.passages[ch.start].scene, ok: true };
+    const years = [...new Set(levelsOf(ch).map((e) => e.level.year))];
+    const picked = profile ? pickLevel(ch, profile) : null;
+    return {
+      stem, title: ch.title, series: ch.series, readingLevel: ch.readingLevel, coverScene: ch.passages[ch.start].scene, ok: true,
+      years, opensAt: picked ? { year: picked.level.year, band: picked.level.band } : undefined,
+    };
   });
 }
 

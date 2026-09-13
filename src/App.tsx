@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { chapterSummaries, loadChapter } from "./content/loadChapter";
+import { loadProfile, pickLevel, saveProfile, type Profile } from "./content/levels";
 import { Library } from "./screens/Library";
 import type { Chapter } from "./content/schema";
 import { initialState, reducer } from "./engine/story";
@@ -18,13 +19,15 @@ import { DebugPanel } from "./components/DebugPanel";
 
 const params = new URLSearchParams(window.location.search);
 const SILENCE_MS = 2500;
-const summaries = chapterSummaries();
+const allSummaries = chapterSummaries();
 
 export default function App() {
   // One chapter → straight to its title. Several → library, unless ?chapter= names one.
-  const initial = params.get("chapter") ?? (summaries.length === 1 ? summaries[0].stem : null);
+  const initial = params.get("chapter") ?? (allSummaries.length === 1 ? allSummaries[0].stem : null);
   const [stem, setStem] = useState<string | null>(initial);
-  if (!stem) return <Library chapters={summaries} onPick={setStem} />;
+  const [profile, setProfileState] = useState<Profile>(loadProfile);
+  const setProfile = (p: Profile) => { setProfileState(p); saveProfile(p); };
+  if (!stem) return <Library chapters={chapterSummaries(profile)} profile={profile} onProfile={setProfile} onPick={setStem} />;
   const loaded = loadChapter(stem);
   if ("error" in loaded) {
     return (
@@ -34,11 +37,20 @@ export default function App() {
       </div>
     );
   }
-  return <Reader key={stem} chapter={loaded.chapter} stem={stem} onLibrary={summaries.length > 1 ? () => setStem(null) : undefined} />;
+  const levelId = pickLevel(loaded.chapter, profile)?.id ?? null;
+  return (
+    <Reader
+      key={`${stem}:${levelId}`}
+      chapter={loaded.chapter}
+      stem={stem}
+      levelId={levelId}
+      onLibrary={allSummaries.length > 1 ? () => setStem(null) : undefined}
+    />
+  );
 }
 
-function Reader({ chapter, stem, onLibrary }: { chapter: Chapter; stem: string; onLibrary?: () => void }) {
-  const [state, dispatch] = useReducer(reducer, chapter, (ch) => initialState(ch, params.get("debug") === "1", stem));
+function Reader({ chapter, stem, levelId, onLibrary }: { chapter: Chapter; stem: string; levelId: string | null; onLibrary?: () => void }) {
+  const [state, dispatch] = useReducer(reducer, chapter, (ch) => initialState(ch, params.get("debug") === "1", stem, levelId));
   const [status, setStatus] = useState<SpeechStatus>("stopped");
   const [transcript, setTranscript] = useState({ finalText: "", interimText: "" });
   const speech = useRef<SpeechSource | null>(null);
@@ -122,7 +134,15 @@ function Reader({ chapter, stem, onLibrary }: { chapter: Chapter; stem: string; 
   let view: React.ReactNode;
   switch (state.screen) {
     case "title":
-      view = <Title chapter={state.chapter} onStart={start} onTripleTap={() => dispatch({ type: "TOGGLE_DEBUG" })} onLibrary={onLibrary} />;
+      view = (
+        <Title
+          chapter={state.chapter}
+          levelLabel={state.levelId ? state.chapter.levels?.[state.levelId]?.label : undefined}
+          onStart={start}
+          onTripleTap={() => dispatch({ type: "TOGGLE_DEBUG" })}
+          onLibrary={onLibrary}
+        />
+      );
       break;
     case "passage":
       view = (
