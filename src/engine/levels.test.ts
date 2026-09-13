@@ -25,8 +25,8 @@ describe("reading levels", () => {
 
   it("beginner text swaps the child's line and adds a grown-up line; secure keeps the base text", () => {
     const b = levelText(coral, "y1-beginner", "p1");
-    expect(b.text).toBe('Splash can swim. Splash got a pearl. "Ooh!" said Splash.');
-    expect(b.narration).toContain("Coral was a mermaid");
+    expect(b.text).toBe("Coral is a mermaid. Splash can swim. Splash got a pearl.");
+    expect(b.narration).toContain("unicorn who could swim"); // continues from the child's line, never sets it up
     const s = levelText(coral, "y1-secure", "p1");
     expect(s.text).toBe(coral.passages.p1.text);
     expect(s.narration).toBeUndefined();

@@ -309,7 +309,7 @@ You cannot tune the aligner without this. Build it in the first session.
    one school year. Saved on the device as the reader profile; a book opens at
    the nearest level it has.
 10. **Two-tier text.** A level may give a passage a `narration` line (grown-up
-   reads, small and dim, never listened for) *below* the child's `text`, so the adult isn't tempted to read first. This is
+   reads, small and dim, never listened for) *below* the child's `text`, so the adult isn't tempted to read first. Write it as a continuation of the child's line, never a lead-in: the child's line must open the page on its own. This is
    how a beginner level keeps the story while cutting the decoding load; it is
    the phonics-scheme page layout. Pickup and cue words must stay in the child's
    text at every level — the validator enforces it.
