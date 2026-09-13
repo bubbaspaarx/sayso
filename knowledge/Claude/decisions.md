@@ -28,3 +28,4 @@
 - **Levels = school year × Beginner/Secure/Advanced**, per the curriculum's year structure; key stage is too coarse. Profile saved on the device; nearest-level fallback.
 - **Grown-up line (`narration`)** carries the story at beginner levels; the engine never listens for it. Pickup/cue words must survive every level (validated).
 - Decodability enforcement deferred to its own task; the daughter's read showed it is the real constraint.
+- **Logo: the karaoke mark.** Wordmark “Say|so” mid-read (amber read, dim unread, pulsing underline), icon = lowercase “so”. Chosen by the user from three directions; letters outlined to paths.

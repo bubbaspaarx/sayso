@@ -37,3 +37,8 @@
 - Bright scenes need a scrim behind the puzzle prompt; the passage gradient alone is enough for the text block but not for centred UI.
 - A 2-column candidate sheet (ffmpeg hstack/vstack, built from Python to dodge zsh quoting) reviews 16 images in one look.
 - Underwater loops compress worse than night scenes (0.8–1.4 MB vs 0.3–0.8 MB); still under the 3 MB cap.
+
+## Brand
+- fontTools (`SVGPathPen` + `TransformPen`, y-flipped) outlines fontsource woff2 glyphs to SVG paths in a few lines; needs a venv on this Mac (PEP 668). Keeps logo SVGs font-independent and lets a React component share the exact paths.
+- Vite rewrites absolute `<link href="/…">` in index.html with `base`, so favicon links work under `/sayso/` without hand-prefixing.
+- Running `npx vitest`/`npm` from `Code.nosync` (after a cwd reset) sweeps sibling repos — always `cd` explicitly in the same command.

@@ -1,6 +1,7 @@
 import type { ChapterSummary } from "../content/loadChapter";
 import { mediaFor } from "../media/mediaMap";
 import { LevelPicker } from "../components/LevelPicker";
+import { Wordmark } from "../components/Wordmark";
 import { bandLabel, yearLabel, type Profile } from "../content/levels";
 import type { Year } from "../content/schema";
 
@@ -17,8 +18,8 @@ export function Library({ chapters, profile, onProfile, onPick }: Props) {
     <div className="relative flex h-full flex-col items-center justify-center gap-10 overflow-y-auto px-8 py-10">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,#1a2b5e_0%,#0b1530_55%,#060c1f_100%)]" />
       <div className="relative text-center fade-up">
-        <div className="mb-2 text-lg font-bold uppercase tracking-[0.3em] text-white/50">Sayso</div>
-        <h1 className="font-extrabold text-amber-soft" style={{ fontSize: "clamp(36px, 5vw, 64px)" }}>
+        <div className="mb-3 flex justify-center"><Wordmark height={64} /></div>
+        <h1 className="font-extrabold text-white/85" style={{ fontSize: "clamp(28px, 3.6vw, 44px)" }}>
           Pick a book
         </h1>
       </div>

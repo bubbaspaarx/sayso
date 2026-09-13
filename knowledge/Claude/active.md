@@ -6,7 +6,7 @@ Reading MVP (Nell and the Cold Night). Brief + decisions log in `Sayso/CLAUDE.md
 _2026-09-12:_ first child read done (user's son, 7). Recognition "accurate to what a child says". Three defects found and fixed same day (next-sentence hop, uncredited tail, no misread feedback) and a reading report added for adults. Committed and deployed by the user (b81b155, Actions green).
 
 ## In Progress
-- 2026-09-13: reading levels (year × band slider, narration line) built; 49 tests green; **uncommitted** until the user pushes.
+- 2026-09-13: reading levels (year × band slider, narration line below the child's text) and the logo/brand assets built; 49 tests green; **uncommitted** until the user pushes.
 - **Chapter 2 (Coral and the Bubble Party)** complete 2026-09-12 22:46: 10 stills, 10 loops, 0 redos, $4.03, ~21 min. Ledger in `curation-ledger.md` + published artifact. Deployed (b81b155).
 - Nothing mid-flight. Working tree clean at b81b155; both books live.
 
