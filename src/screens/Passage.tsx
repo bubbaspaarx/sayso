@@ -28,12 +28,12 @@ export function Passage({ state, status, onNext, onCueExpire = () => {}, dim = f
         <div className="flex flex-1 items-end justify-center px-[6vw] pb-6 pt-20">
           <div className="w-full max-w-[1100px]">
             <CueStrip chapter={state.chapter} cues={state.reading.cues} onExpire={onCueExpire} />
+            <WordText reading={state.reading} dim={dim} />
             {state.reading.narration && (
-              <p className={`narration mb-3 ${dim ? "opacity-40" : ""}`} aria-label="Grown-up reads">
+              <p className={`narration mt-4 ${dim ? "opacity-40" : ""}`} aria-label="Grown-up reads">
                 {state.reading.narration}
               </p>
             )}
-            <WordText reading={state.reading} dim={dim} />
           </div>
         </div>
         <div className="flex items-center justify-between gap-4 px-[6vw] pb-[max(1.25rem,env(safe-area-inset-bottom))]">
